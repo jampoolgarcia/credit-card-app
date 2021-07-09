@@ -13,4 +13,8 @@ export class FormCardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onSubmit(){
+    
+  }
+
 }
