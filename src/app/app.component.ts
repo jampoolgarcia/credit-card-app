@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styles: []
 })
 export class AppComponent {
-  title = 'credit-card-app';
+  title = 'Tarjetas de Credito';
 }
