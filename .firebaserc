@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "creditcard-d85a9": {
+      "hosting": {
+        "credit-card-app": [
+          "creditcard-d85a9"
+        ]
+      }
+    }
+  }
+}
