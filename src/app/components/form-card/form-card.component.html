@@ -32,7 +32,11 @@
           </div>
         </div>
       </div>
-      <button type="submit" [disabled]="this.form.invalid" class="btn btn-success btn-lg btn-block w-100"><i class="fas fa-coins"></i> Registrar</button>
+      <button type="submit" [disabled]="this.form.invalid || this.isLoading" class="btn btn-success btn-lg btn-block w-100">
+        <i class="fas fa-coins"></i> 
+          Registrar 
+        <span *ngIf="this.isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
     </form>
   </div>
 </div>
