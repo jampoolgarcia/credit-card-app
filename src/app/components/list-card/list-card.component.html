@@ -3,19 +3,10 @@
     <h4 class="card-title title">Listado de Tarjetas</h4>
     <table class="table">
       <tbody>
-        <tr>
-          <td scope="row">Titular</td>
-          <td>201039129312093</td>
-          <td>11/22</td>
-          <td>
-            <i class="fa fa-edit text-primary" aria-hidden="true"></i>
-            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-          </td>
-        </tr>
-        <tr>
-          <td scope="row">Titular</td>
-          <td>201039129312093</td>
-          <td>11/22</td>
+        <tr *ngFor="let record of recordList">
+          <td scope="row">{{ record.holder }}</td>
+          <td>{{ record.number }}</td>
+          <td>{{ record.expirationDate }}</td>
           <td>
             <i class="fa fa-edit text-primary" aria-hidden="true"></i>
             <i class="fa fa-trash text-danger" aria-hidden="true"></i>

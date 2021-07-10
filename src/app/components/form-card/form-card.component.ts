@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { CreditCardI } from 'src/app/model/credit-card';
 import { CreditCardService } from 'src/app/services/credit-card.service';
 
@@ -15,7 +16,8 @@ export class FormCardComponent {
   public isLoading = false;
 
   constructor(private fb: FormBuilder, 
-              private _service: CreditCardService) {
+              private _service: CreditCardService,
+              private toastr: ToastrService) {
     this.buildingForm();
   }
 
@@ -30,11 +32,15 @@ export class FormCardComponent {
 
   onSubmit(): void{
     this.isLoading = true;
+    this.form.disable();
     const CARD = this.getFormData();
-    this._service.addCard(CARD).then(()=>{
+    this._service.addRecord(CARD).then(()=>{
+      this.toastr.success(`La tarjeta numero ${CARD.number} ya ha sido guardada.`, 'Registro exitoso.');
       this.isLoading = false;
       this.form.reset();
+      this.form.enable();
     }, err => {
+      this.toastr.error(err, 'Opps... Ha ocurrido un error')
       console.log(err);
     })
   }
