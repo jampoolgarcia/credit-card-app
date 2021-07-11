@@ -37,8 +37,8 @@ export class CreditCardService {
     return this.$record.asObservable();
   }
 
-  updateRecord(){
-    
+  updateRecord(id: string, record: CreditCardI): Promise<void>{
+    return this.firestore.collection(this.collection).doc(id).update(record)
   }
 
   private parseData(data: any): CreditCardI[]{

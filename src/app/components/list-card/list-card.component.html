@@ -2,19 +2,24 @@
   <div class="card-body">
     <h4 class="card-title title">Listado de Tarjetas</h4>
     <ng-container *ngIf="!isLoading; else spinner">
-      <table class="table">
-        <tbody>
-          <tr *ngFor="let record of recordList">
-            <td scope="row">{{ record.holder }}</td>
-            <td>{{ record.number }}</td>
-            <td>{{ record.expirationDate }}</td>
-            <td>
-              <i class="fa fa-edit text-primary" (click)="updateRecord(record)" aria-hidden="true"></i>
-              <i class="fa fa-trash text-danger" (click)="deleteRecord(record)" aria-hidden="true"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <ng-container *ngIf="recordList.length > 0; else noRecordList">
+        <table class="table">
+          <tbody>
+            <tr *ngFor="let record of recordList">
+              <td scope="row">{{ record.holder }}</td>
+              <td>{{ record.number }}</td>
+              <td>{{ record.expirationDate }}</td>
+              <td>
+                <i class="fa fa-edit text-primary" (click)="updateRecord(record)" aria-hidden="true"></i>
+                <i class="fa fa-trash text-danger" (click)="deleteRecord(record)" aria-hidden="true"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-template #noRecordList>
+        <h4>No hay tarjetas registradas.</h4>
+      </ng-template>
     </ng-container>
     <ng-template #spinner>
       <app-spinner></app-spinner>

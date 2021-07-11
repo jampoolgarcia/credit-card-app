@@ -4,6 +4,6 @@ export interface CreditCardI {
   number: number;
   expirationDate: string;
   cvv: number;
-  createDate: Date;
+  createDate?: Date;
   updateDate: Date;
 }

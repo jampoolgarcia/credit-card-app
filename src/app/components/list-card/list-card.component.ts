@@ -18,7 +18,9 @@ export class ListCardComponent implements OnInit {
   public recordList: CreditCardI[] = [];
   public isLoading = true;
 
-  constructor(private _service: CreditCardService, private toastr: ToastrService) { }
+  constructor(private _service: CreditCardService, private toastr: ToastrService) {
+    this.recordList.length 
+   }
 
   ngOnInit(): void {
     this.fillRecords();

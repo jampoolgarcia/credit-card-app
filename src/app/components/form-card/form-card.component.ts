@@ -16,6 +16,8 @@ export class FormCardComponent implements OnInit, OnDestroy {
   public form!: FormGroup;
   public isLoading = false;
   private subscription = new Subscription();
+  public title = "Agregar Tarjeta";
+  private id: string | undefined;
 
   constructor(private fb: FormBuilder, 
               private _service: CreditCardService,
@@ -26,7 +28,9 @@ export class FormCardComponent implements OnInit, OnDestroy {
   ngOnInit(): void{
     this.subscription = this._service.getRecordUpdate()
       .subscribe(record => {
-        console.log(record);
+        this.title = 'Editar Tarjeta';
+        this.id = record.id;
+        this.buildingForm(record);
       }, err => {
         console.log(err);
         this.toastr.error('Oops... ha ocurrido un error al intentar actualizar.', 'Error')
@@ -47,30 +51,68 @@ export class FormCardComponent implements OnInit, OnDestroy {
   }        
 
   onSubmit(): void{
+
     this.isLoading = true;
     this.form.disable();
     const CARD = this.getFormData();
-    this._service.addRecord(CARD).then(()=>{
-      this.toastr.success(`La tarjeta numero ${CARD.number} ya ha sido guardada.`, 'Registro exitoso.');
-      this.isLoading = false;
-      this.form.reset();
-      this.form.enable();
+
+    if(this.id === undefined){
+      this.onSaveRecord(CARD);
+      return;
+    }
+    
+    this.onUpdateRecord(CARD);
+    
+  }
+
+  onSaveRecord(record: CreditCardI): void {
+    this._service.addRecord(record).then(()=>{
+      this.toastr.success(`La tarjeta numero ${record.number} ya ha sido guardada.`, 'Registro exitoso');
+      this.resetForm();
     }, err => {
+      this.isLoading = false;
       this.toastr.error(err, 'Opps... Ha ocurrido un error')
       console.log(err);
     })
   }
 
+  onUpdateRecord(record: CreditCardI): void {
+    this._service.updateRecord(this.id!, record).then(()=>{
+      this.toastr.success(`La tarjeta numero ${record.number} ya ha sido actualizada.`, 'Registro Actualizado');
+      this.resetForm();
+      this.id = undefined;
+      this.title = "Agregar Tarjeta";
+    }, err => {
+      this.isLoading = false;
+      this.toastr.error(err, 'Opps... Ha ocurrido un error al actualizar')
+      console.log(err);
+    })
+  }
+
+  private resetForm(){
+    this.isLoading = false;
+    this.form.reset();
+    this.form.enable();
+  }
+
   getFormData(): CreditCardI {
     const { holder, number, expirationDate, cvv} = this.form.value;
-    return {
+    
+    let record: CreditCardI = {
       holder,
       number,
       expirationDate,
       cvv,
-      createDate: new Date(),
       updateDate: new Date(),
+    } 
+
+    if(this.id === undefined){
+      record.createDate = new Date();
+      return record;
     }
+    
+    return record;
+
   }
 
 }
