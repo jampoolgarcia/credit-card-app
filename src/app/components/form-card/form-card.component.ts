@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { CreditCardI } from 'src/app/model/credit-card';
 import { CreditCardService } from 'src/app/services/credit-card.service';
 
@@ -10,23 +11,38 @@ import { CreditCardService } from 'src/app/services/credit-card.service';
   styles: [
   ]
 })
-export class FormCardComponent {
+export class FormCardComponent implements OnInit, OnDestroy {
 
   public form!: FormGroup;
   public isLoading = false;
+  private subscription = new Subscription();
 
   constructor(private fb: FormBuilder, 
               private _service: CreditCardService,
               private toastr: ToastrService) {
-    this.buildingForm();
+    this.buildingForm(null);
   }
 
-  buildingForm(){
+  ngOnInit(): void{
+    this.subscription = this._service.getRecordUpdate()
+      .subscribe(record => {
+        console.log(record);
+      }, err => {
+        console.log(err);
+        this.toastr.error('Oops... ha ocurrido un error al intentar actualizar.', 'Error')
+      })
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  buildingForm(record: CreditCardI | null): void{
     this.form = this.fb.group({
-      holder: ['', [Validators.required, Validators.minLength(3)]],
-      number: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16), Validators.pattern('^([0-9])*$')]],
-      expirationDate: ['', [Validators.required, Validators.minLength(5), Validators.minLength(5), Validators.pattern('(0(?!0)|1(?=[0-2]))[0-9]/[0-9][0-9]')]],
-      cvv: ['', [Validators.required, Validators.minLength(3), Validators.minLength(3), Validators.pattern('^([0-9])*$')]]
+      holder: [record?.holder, [Validators.required, Validators.minLength(3)]],
+      number: [record?.number, [Validators.required, Validators.minLength(16), Validators.maxLength(16), Validators.pattern('^([0-9])*$')]],
+      expirationDate: [record?.expirationDate, [Validators.required, Validators.minLength(5), Validators.minLength(5), Validators.pattern('(0(?!0)|1(?=[0-2]))[0-9]/[0-9][0-9]')]],
+      cvv: [record?.cvv, [Validators.required, Validators.minLength(3), Validators.minLength(3), Validators.pattern('^([0-9])*$')]]
     })
   }        
 

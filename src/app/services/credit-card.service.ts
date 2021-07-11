@@ -10,7 +10,7 @@ import { CreditCardI } from '../model/credit-card';
 export class CreditCardService {
 
   private collection = 'credit-card';
-  private record = new Subject<CreditCardI>(); 
+  private $record = new Subject<CreditCardI>(); 
 
   constructor(private firestore: AngularFirestore) { }
 
@@ -29,7 +29,17 @@ export class CreditCardService {
     return this.firestore.collection(this.collection).doc(id).delete();
   }
 
-  
+  addRecordUpdate(record: CreditCardI){
+    this.$record.next(record);
+  }
+
+  getRecordUpdate(){
+    return this.$record.asObservable();
+  }
+
+  updateRecord(){
+    
+  }
 
   private parseData(data: any): CreditCardI[]{
     let list: CreditCardI[] = [];

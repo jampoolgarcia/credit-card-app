@@ -47,7 +47,7 @@ export class ListCardComponent implements OnInit {
   }
 
   updateRecord(record: CreditCardI){
-
+    this._service.addRecordUpdate(record);
   }
 
 }
