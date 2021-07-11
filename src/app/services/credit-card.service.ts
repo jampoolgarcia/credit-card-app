@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CreditCardI } from '../model/credit-card';
 
@@ -9,7 +9,8 @@ import { CreditCardI } from '../model/credit-card';
 })
 export class CreditCardService {
 
-  private collection = 'credit-card'
+  private collection = 'credit-card';
+  private record = new Subject<CreditCardI>(); 
 
   constructor(private firestore: AngularFirestore) { }
 
@@ -23,6 +24,12 @@ export class CreditCardService {
         map(data => this.parseData(data))
       );
   }
+
+  deleteRecord(id: string): Promise<void>{
+    return this.firestore.collection(this.collection).doc(id).delete();
+  }
+
+  
 
   private parseData(data: any): CreditCardI[]{
     let list: CreditCardI[] = [];
